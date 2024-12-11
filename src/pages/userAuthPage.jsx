@@ -48,7 +48,8 @@ const UserAuthPage = () => {
         localStorage.setItem('user-auth-token', data.token);
         // Continue handling the user state and redirect after successful login
     } catch (error) {
-        toast.error("Failed to authenticate with Google");
+      console.error("Failed to authenticate with Google:", error);
+        toast.error(error);
     }
 };
 
