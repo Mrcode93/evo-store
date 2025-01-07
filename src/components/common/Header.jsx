@@ -92,11 +92,7 @@ const isActive = (path) => {
               whileHover={{ scale: 1.05 }}
             >
               <Link to="/" className="flex items-center">
-                <img 
-                  src={Logo} 
-                  alt="logo" 
-                  className="h-20 w-auto sm:h-16 md:h-18 lg:h-[100px] xl:h-[100px] 2xl:h-[100px]"
-                />
+              <h1 className='title-logo'>عين الصقر</h1>
               </Link>
             </motion.div>
 
