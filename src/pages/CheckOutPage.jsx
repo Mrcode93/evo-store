@@ -5,7 +5,8 @@ import { addOrder, fetchUserOrders } from '../redux/ordersSlice';
 import {removeAllItemsFromCart} from '../redux/cartSlice';
 import { showToast } from '../utils/Toast';
 import { fetchUserInfo } from "../redux/userAuthSlice";
-
+import BackBtn from '../components/common/BackBtn';
+import RadialProgress from '../components/common/RadialProgress';
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -13,14 +14,16 @@ const Checkout = () => {
   const { user } = useSelector((state) => state.userAuth);
     const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const [formData, setFormData] = useState({
-    name: user.name || '',
-    phone: user.mobile || '',
-    address: user.address || '',
-    city: user.city || '',
-    state: user.state || '',
+    name: user?.name || '',
+    phone: user?.mobile || '',
+    address: user?.address || '',
+    city: user?.city || '',
+    state: user?.state || '',
     paymentMethod: 'on delivery',
     notes: '',
   });
+  const [progress, setProgress] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,27 +33,42 @@ const Checkout = () => {
   }, [dispatch]);
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
-        const order = {
-          ...formData,
-          userId: user._id || null,
-            items: cart,
-            total: totalPrice,
-        };
-    dispatch(addOrder(order)).then(() => {
-      showToast('تم ارسال الطلب بنجاح', 'success');
+    e.preventDefault();
+    setIsVisible(true);
+    setProgress(10); // Start with 10% progress (e.g., validating form)
+
+    const order = {
+      ...formData,
+      userId: user?._id || null,
+      items: cart,
+      total: totalPrice,
+    };
+
+    try {
+      setProgress(20); // Preparing API request
+      await new Promise(resolve => setTimeout(resolve, 200)); // Simulate delay
+      setProgress(30); // API request in progress
+      await dispatch(addOrder(order)).unwrap();
+      setProgress(50); // API request successful
+      showToast("تم ارسال الطلب بنجاح", "success");
+
+      setProgress(60); // Removing items from cart
       dispatch(removeAllItemsFromCart());
-      navigate('/');
+      await new Promise(resolve => setTimeout(resolve, 200)); // Simulate delay
+      setProgress(80); // Finalizing order
+      setTimeout(() => {
+        setProgress(100); // Complete
+        setIsVisible(false); // Hide progress after a slight delay
+        navigate("/");
+      }, 500);
+    } catch (error) {
+      setIsVisible(false);
+      showToast("حدث خطأ أثناء إرسال الطلب", "error");
     }
-    );
-   
-   
-      
-
   };
-
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 bg-white  rounded-lg" dir='rtl'>
+    <div className="max-w-4xl relative mx-auto px-6 py-12 bg-white  rounded-lg" dir='rtl'>
+      <BackBtn />
           <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
             تأكيد الطلب
       </h1>
@@ -146,6 +164,9 @@ const Checkout = () => {
           <span>{totalPrice} د.ع</span>
         </div>
       </div>
+        {/* Radial Progress */}
+      <RadialProgress progress={progress} isVisible={isVisible} message="جاري معالجة الطلب..." />
+    
     </div>
   );
 };

@@ -9,6 +9,8 @@ import Footer from '../components/common/Footer';
 import AdsComponent from '../components/Ads';
 import BrowseByCategory from '../components/BrowsByCategory';
 import ChatBot from '../components/Chatbot';
+import  Discounts from '../components/products/Discounts';
+import FlashSales from '../components/flashSales';
 
 const HomePage = ({products, latest, ads ,categories, flashSales, userInfo, cart}) => {
   const { heroImages } = useSelector(state => state.heroImages);
@@ -29,20 +31,23 @@ const HomePage = ({products, latest, ads ,categories, flashSales, userInfo, cart
       className="min-h-screen relative bg-gray-100 dark:bg-primary"
      
       >
-      <Header cart={cart} />
+     
+ 
            <ChatBot />
       {/* Hero Section */}
-      <section className="w-full h-[80vh] relative">
+      {/* <section className="w-full h-[80vh] relative"> */}
         <HeroSlider images={heroImages} />
-      </section>
+      {/* </section> */}
    
 
       {/* Featured Products */}
-      <section className="p-2">
-        <div className="max-w-7xl mx-auto ">
+      <section >
+        <div className="max-w-7xl mx-auto sm:px-2 lg:px-8">
+             
           <BrowseByCategory categories={categories}  />
           <AdsComponent ads={ads} />
-          
+          <FlashSales flashSales={flashSales} />
+          <Discounts products={products} />
           <LatestProductsList latest={latest} />
           <ProductList products={products} />
         </div>

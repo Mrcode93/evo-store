@@ -30,103 +30,84 @@ const Footer = () => {
   };
 
   return (
-    <motion.footer 
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className="bg-secondary dark:bg-primary text-primary dark:text-secondary"
-    >
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <motion.div 
-          variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12"
-        >
-          {/* About Section */}
-          <motion.div variants={itemVariants} className="space-y-6">
-            <motion.h3 
-              className="text-2xl font-bold"
-              whileHover={{ scale: 1.05 }}
-            >
-              Evo Store
-            </motion.h3>
-            <p className="text-neutral">
-              Your one-stop destination for quality products and exceptional service.
+    <footer className="bg-gradient-to-l from-[#11151c] to-[#212d40] text-gray-100" dir='rtl'>
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Company Info */}
+          <motion.div
+            variants={itemVariants}
+            className="space-y-4"
+          >
+            <h3 className="text-2xl font-bold text-secondary mb-6">عين الصقر</h3>
+            <p className="text-gray-300 max-w-sm">
+              نحن نقدم أفضل المنتجات بأعلى جودة وأفضل الأسعار لعملائنا الكرام
             </p>
           </motion.div>
 
-       
+          {/* Quick Links */}
+          <motion.div
+            variants={itemVariants}
+            className="space-y-4"
+          >
+            <h3 className="text-xl font-bold text-secondary mb-6">روابط سريعة</h3>
+            <nav className="flex flex-col space-y-3">
+              <Link to="/terms" className="text-gray-300 hover:text-secondary transition-colors duration-300">
+                الشروط والأحكام
+              </Link>
+              <Link to="/privacy" className="text-gray-300 hover:text-secondary transition-colors duration-300">
+                سياسة الخصوصية
+              </Link>
+            </nav>
+          </motion.div>
 
           {/* Contact Info */}
-          <motion.div variants={itemVariants} className="space-y-6">
-            <h3 className="text-xl font-bold">Contact Us</h3>
+          <motion.div
+            variants={itemVariants}
+            className="space-y-4"
+          >
+            <h3 className="text-xl font-bold text-secondary mb-6">تواصل معنا</h3>
             <ul className="space-y-4">
               {[
-                { Icon: FiMapPin, text: "123 Store Street, City, Country" },
-                { Icon: FiPhone, text: "+1 234 567 890" },
+                { Icon: FiMapPin, text: "123 شارع المتجر، المدينة" },
+                { Icon: FiPhone, text: "+966 123 456 789" },
                 { Icon: FiMail, text: "contact@evostore.com" }
               ].map((item, index) => (
                 <motion.li 
                   key={index}
                   whileHover={{ x: 5 }}
-                  className="flex items-center space-x-3"
+                  className="flex items-center space-x-3 text-gray-300"
                 >
-                  <item.Icon className="text-accent" />
-                  <span className="text-neutral">{item.text}</span>
+                  <item.Icon className="text-secondary" />
+                  <span>{item.text}</span>
                 </motion.li>
               ))}
             </ul>
           </motion.div>
-          {/* About Section */}
-          <motion.div variants={itemVariants} className="space-y-6">
-            <h3 className="text-xl font-bold">
-              سياسات الموقع
-            </h3>
-            <div className=' flex flex-col'>
-              
-           
-  {/* Links */}
-  <Link to={"/terms"} className="text-neutral hover:text-primary transition-colors duration-300">
-    الشروط والأحكام
-  </Link>
-  <Link to={"/privacy"} className="text-neutral hover:text-primary transition-colors duration-300">
-    سياسة الخصوصية
-              </Link>
-               </div>
-</motion.div>
+        </div>
 
-
-         
-        </motion.div>
-
-        {/* Social Links */}
-        <motion.div 
-          variants={itemVariants}
-          className="mt-12 pt-12 border-t border-primary/10 dark:border-secondary/10"
-        >
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-            <motion.div 
-              variants={itemVariants}
-              className="text-neutral"
-            >
-              © 2024 Evo Store. All rights reserved.
-            </motion.div>
-            <div className="flex space-x-6">
+        {/* Social Media & Copyright */}
+        <div className="mt-12 pt-8 border-t border-gray-700">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex space-x-4">
               {[FiFacebook, FiTwitter, FiInstagram, FiLinkedin].map((Icon, index) => (
                 <motion.a
                   key={index}
                   href="#"
-                  variants={socialVariants}
                   whileHover="hover"
-                  className="text-neutral hover:text-accent transition-colors duration-300"
+                  variants={socialVariants}
+                  className="text-gray-300 hover:text-secondary transition-colors duration-300"
                 >
-                  <Icon className="w-6 h-6" />
+                  <Icon size={24} />
                 </motion.a>
               ))}
             </div>
+            <p className="text-gray-400 text-sm">
+              جميع الحقوق محفوظة © {new Date().getFullYear()} - Ayn-Alsakar Industries Ltd
+            </p>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.footer>
+    </footer>
   );
 };
 

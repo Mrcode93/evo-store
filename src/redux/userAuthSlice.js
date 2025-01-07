@@ -56,20 +56,6 @@ export const fetchUserInfo = createAsyncThunk(
     'userAuth/fetchUserInfo',
     async (_, { rejectWithValue }) => {
         try {
-            const cookieString = document.cookie;
-            console.log("All cookies: ", cookieString);
-
-            const token = cookieString
-                .split("; ")
-                .map(cookie => cookie.trim())
-                .find((row) => row.startsWith("user-auth-token="))
-                ?.split("=")[1];
-
-            console.log("Extracted token: ", token);
-
-            if (!token) {
-                throw new Error("Token not found in cookies");
-            }
 
             const response = await axios.get(`${apiURL}/info`, {
                 headers: {
@@ -148,11 +134,7 @@ export const logoutUser = createAsyncThunk(
     'userAuth/logoutUser',
     async (_, { rejectWithValue }) => {
         try {
-            axios.get(`${apiURL}/google/logout`, {
-                headers: {
-                    Authorization: `Bearer ${Cookies.get('user-auth-token')}`,
-                },
-            });
+            //    remove token from cookies
             Cookies.remove('user-auth-token');
             return null;
         } catch (error) {

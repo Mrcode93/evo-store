@@ -37,7 +37,7 @@ const HeroSlider = ({ images }) => {
   };
 
   return (
-    <div className="relative bg-white w-full h-full overflow-hidden">
+    <div className="relative bg-white w-full h-[200px] xsm:h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[650px] overflow-hidden">
       <AnimatePresence initial={false} custom={current}>
         <motion.img
           key={current}
@@ -47,21 +47,21 @@ const HeroSlider = ({ images }) => {
           initial="enter"
           animate="center"
           exit="exit"
-          className="absolute w-full h-full object-contain"
+          className="absolute w-full h-full object-cover object-center"
         />
       </AnimatePresence>
-      <div className="absolute inset-0 flex justify-between items-center p-4">
+      <div className="absolute inset-0 flex justify-between items-center p-2 sm:p-4">
         <button
           onClick={prevSlide}
-          className="p-2 bg-primary/50 dark:bg-secondary/50 rounded-full text-secondary dark:text-primary hover:bg-primary/70 dark:hover:bg-secondary/70 transition-colors"
+          className="p-1 sm:p-2 bg-primary/50 dark:bg-secondary/50 rounded-full text-secondary dark:text-primary hover:bg-primary/70 dark:hover:bg-secondary/70 transition-colors"
         >
-          <FiChevronLeft className="w-6 h-6" />
+          <FiChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
         <button
           onClick={nextSlide}
-          className="p-2 bg-primary/50 dark:bg-secondary/50 rounded-full text-secondary dark:text-primary hover:bg-primary/70 dark:hover:bg-secondary/70 transition-colors"
+          className="p-1 sm:p-2 bg-primary/50 dark:bg-secondary/50 rounded-full text-secondary dark:text-primary hover:bg-primary/70 dark:hover:bg-secondary/70 transition-colors"
         >
-          <FiChevronRight className="w-6 h-6" />
+          <FiChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
       </div>
     </div>

@@ -172,7 +172,7 @@ const Cart = () => {
         </div>
       )}
 
-      {user && (
+      {!user && (
         <Modal
           isOpen={showCheckoutModal}
           onClose={() => setShowCheckoutModal(false)}
@@ -210,108 +210,97 @@ const Cart = () => {
           </header>
 
           <div className="mt-8">
-            <div className="overflow-x-auto border border-gray-300 rounded-md">
-              <table className="min-w-full text-sm divide-y divide-gray-200">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-4 py-2 text-left font-medium text-gray-900">
-                      المنتج
-                    </th>
-                    <th className="px-4 py-2 text-left font-medium text-gray-900">
-                      السعر
-                    </th>
-                    <th className="px-4 py-2 text-center font-medium text-gray-900">
-                      الكمية
-                    </th>
-                    <th className="px-4 py-2 text-right font-medium text-gray-900">
-                      المجموع
-                    </th>
-                    <th className="px-4 py-2 text-right font-medium text-gray-900">
-                      إزالة
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {cart.map((item) => (
-                    <tr key={item._id} className="hover:bg-gray-100">
-                      <td className="px-4 py-4 flex items-center space-x-4">
-                        <img
-                          src={item.image}
-                          alt="product"
-                          className="w-16 h-16 rounded object-cover"
-                        />
-                        <span className="text-gray-700 font-medium">
-                          {item.name}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 text-gray-900">
-                        {item.price} د.ع
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <div className="inline-flex items-center border border-gray-300 rounded">
-                          <button
-                            onClick={() =>
-                              handleDecreaseQuantity(item.productId, item.quantity)
-                            }
-                            className="px-2 py-1 bg-gray-200 text-gray-700 hover:bg-gray-300"
-                          >
-                            -
-                          </button>
-                          <input
-                            type="number"
-                            value={item.quantity}
-                            readOnly
-                            className="w-12 text-center bg-gray-100 border-0"
-                          />
-                          <button
-                            onClick={() =>
-                              handleIncreaseQuantity(item.productId, item.quantity)
-                            }
-                            className="px-2 py-1 bg-gray-200 text-gray-700 hover:bg-gray-300"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 text-right font-medium text-gray-900">
-                        {item.price * item.quantity} د.ع
-                      </td>
-                      <td className="px-4 py-4 text-right">
-                        <button
-                          onClick={() => handleRemoveItem(item._id)}
-                          className="text-red-500 hover:text-red-600"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-              <div className="w-full sm:w-auto flex items-center space-x-2">
+  <div className="overflow-x-auto border border-gray-300 rounded-lg shadow-lg">
+    <table className="min-w-full text-sm divide-y divide-gray-200 bg-white">
+      <thead>
+        <tr className="bg-gray-50">
+          <th className="px-4 py-3 text-left font-semibold text-gray-800">المنتج</th>
+          <th className="px-4 py-3 text-left font-semibold text-gray-800">السعر</th>
+          <th className="px-4 py-3 text-center font-semibold text-gray-800">الكمية</th>
+          <th className="px-4 py-3 text-right font-semibold text-gray-800">إزالة</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-gray-100">
+        {cart.map((item, index) => (
+          <tr key={index} className="hover:bg-gray-50">
+            <td className="px-4 py-4 flex items-center space-x-4">
+              <img
+                src={item.image}
+                alt="product"
+                className="w-16 h-16 rounded-md object-cover border border-gray-200"
+              />
+              <span className="text-gray-700 text-[12 px] font-medium">{item.name}</span>
+            </td>
+            <td className="px-4 py-4 text-gray-900 font-semibold text-[12px]">{item.price} د.ع</td>
+            <td className="px-4 py-4 text-center">
+              <div className="inline-flex items-center border border-gray-300 rounded-md overflow-hidden">
                 <button
-                  className="bg-accent text-white rounded-md px-4 py-2 font-medium hover:bg-primary"
-                  onClick={handleClearCart}
+                  onClick={() => handleDecreaseQuantity(item.productId, item.quantity)}
+                  className="px-2 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200"
                 >
-                  افراغ السلة
+                  -
+                </button>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  readOnly
+                  className="w-8 text-center bg-white border-0 text-gray-800"
+                />
+                <button
+                  onClick={() => handleIncreaseQuantity(item.productId, item.quantity)}
+                  className="px-2 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200"
+                >
+                  +
                 </button>
               </div>
-              <div className="text-center border w-[300px] border-gray-300 p-4 rounded-md">
-                <p className="text-gray-700 font-bold">
-                  إجمالي المبلغ: <span className="font-medium text-danger"> {totalPrice} د.ع</span>
-                </p>
-                <p className="text-sm text-gray-500">الشحن: مجاني</p>
-                <button
-                  className="mt-4 bg-accent text-white px-6 py-2 rounded-md font-medium hover:bg-red-600"
-                  onClick={handleProceedToCheckout}
-                >
-                  المتابعة للدفع
-                </button>
-              </div>
-            </div>
-          </div>
+            </td>
+            <td className="px-4 py-4 text-right">
+              <button
+                onClick={() => handleRemoveItem(item._id)}
+                className="text-red-500 hover:text-red-600"
+              >
+                <Trash2 size={20} />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+      <tfoot className="bg-gray-50">
+        <tr>
+          <td colSpan="4" className="px-4 py-4 text-right font-semibold text-gray-800">
+            إجمالي المبلغ: <span className="text-accent">{totalPrice} د.ع</span>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  {/* Actions Section */}
+  <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-6">
+    {/* Clear Cart Button */}
+    <button
+      className="w-full sm:w-auto bg-accent text-white rounded-lg px-6 py-3 font-medium hover:bg-primary transition duration-200"
+      onClick={handleClearCart}
+    >
+      افراغ السلة
+    </button>
+
+    {/* Summary Section */}
+    <div className="w-full sm:w-[300px] border border-gray-300 p-6 rounded-lg shadow-md bg-white text-center">
+      <p className="text-gray-800 font-bold text-lg">
+        إجمالي المبلغ: <span className="font-medium text-danger">{totalPrice} د.ع</span>
+      </p>
+      <p className="text-sm text-gray-500 mt-1">الشحن: مجاني</p>
+      <button
+        className="mt-4 bg-accent text-white px-6 py-3 rounded-lg font-medium hover:bg-red-600 transition duration-200 w-full"
+        onClick={handleProceedToCheckout}
+      >
+        المتابعة للدفع
+      </button>
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
     </section>

@@ -1,8 +1,20 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   darkMode: 'class', // Enable dark mode using a class
   theme: {
+    screens: {
+      xsm: "320px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+
+    },
     extend: {
       colors: {
         primary: "#121212",       // Rich, modern black
@@ -43,11 +55,26 @@ export default {
         24: '6rem',
         12: '3rem',
         6: '1.5rem',
+        '1/2': '50%',
+        '1/3': '33.333333%',
+        '2/3': '66.666667%',
+        '1/4': '25%',
+        '3/4': '75%',
+        '1/5': '20%',
+        '2/5': '40%',
+        '3/5': '60%',
+        '4/5': '80%',
+        '1/6': '16.666667%',
+        '5/6': '83.333333%',
+        '1/12': '8.333333%',
+        '5/12': '41.666667%',
+        '7/12': '58.333333%',
+        '11/12': '91.666667%',
       },
     },
   },
   plugins: [
-    // eslint-disable-next-line no-undef
     require("tailwindcss-animated"),
+    require('daisyui')
   ],
 };

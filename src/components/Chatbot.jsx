@@ -73,7 +73,7 @@ const SimpleChatbot = () => {
 const ChatToggleButton = ({ isOpen, toggleChat }) => (
   <button
     onClick={toggleChat}
-    className="fixed z-50 bottom-6 right-6 p-4 bg-gradient-to-l from-[#065A82] to-[#0A9396] text-white rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none"
+    className="fixed z-50 bottom-20 right-6 p-4 bg-gradient-to-l from-[#065A82] to-[#0A9396] text-white rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none"
   >
     <FiMessageCircle size={28} />
   </button>

@@ -5,7 +5,7 @@ const BackBtn = () => {
         window.history.back();
     };
     return (
-        <button onClick={onClick} className='absolute top-4 z-10 left-10 text-accent'>
+        <button onClick={onClick} className='absolute top-4 z-10 left-10 sm:left-5 md:left-5 xsm:left-5 '>
             <ArrowLeftIcon style={styles.icon} />
 
         </button>

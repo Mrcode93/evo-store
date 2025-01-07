@@ -25,7 +25,7 @@ const UserAuthPage = () => {
     if (isLogin) {
       try {
         await dispatch(loginUser(formData)).unwrap();
-        toast.success('Logged in successfully');
+        window.location.href = '/';
       } catch (error) {
         toast.error(error.message || 'Login failed');
       }
@@ -40,18 +40,7 @@ const UserAuthPage = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-        window.location.href = `${ApiUrl}/auth/google`;
-        const res = await fetch(`${ApiUrl}/auth/google`);
-        const data = await res.json();
-        localStorage.setItem('user-auth-token', data.token);
-        // Continue handling the user state and redirect after successful login
-    } catch (error) {
-      console.error("Failed to authenticate with Google:", error);
-        toast.error(error);
-    }
-};
+
 
   return (
     <div className="flex items-center px-4 justify-center min-h-screen bg-gray-100" dir='rtl'>
@@ -64,14 +53,7 @@ const UserAuthPage = () => {
             {isLogin ? 'تسجيل الدخول' : 'انشاء حساب جديد'}
           </h1>
         </div>
-        <div className="flex justify-center gap-4 mt-2 mb-2">
-          <button
-            className="flex items-center justify-center w-full h-8 bg-gray-200 rounded-md hover:bg-gray-300"
-            onClick={handleGoogleLogin}
-          >
-            <FcGoogle size={30} />
-          </button>
-        </div>
+    
         <div className="text-center text-gray-500 ">او</div>
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (

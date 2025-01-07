@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import parse, { domToReact } from "html-react-parser";
 import { showToast } from "../utils/Toast";
 import BackBtn from "../components/common/BackBtn";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 export default function ProductDetail({ user, products }) {
   const { id } = useParams(); // Extract product ID from URL parameters
   const [product, setProduct] = useState(null); // State to store the selected product details
@@ -167,7 +168,7 @@ export default function ProductDetail({ user, products }) {
                   <div className="flex gap-2 mt-4">
                     {/* Thumbnails for product images */}
                     {product.images.map((image, index) => (
-                      <img
+                      <LazyLoadImage
                         key={index}
                         src={image}
                         alt={`Thumbnail ${index + 1}`}

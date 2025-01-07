@@ -74,7 +74,6 @@ export const removeAllItemsFromCart = createAsyncThunk(
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            showToast('تمت إزالة جميع المنتجات من السلة', 'success');
             return response.data;
         } catch (error) {
             showToast(error.response.data, 'error');

@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { useDispatch, useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
+import { fetchProducts } from '../redux/productsSlice';
+import { useNavigate } from 'react-router-dom';
 
 const AdsComponent = ({ ads }) => {
   const [timeLeft, setTimeLeft] = useState({
@@ -8,6 +12,14 @@ const AdsComponent = ({ ads }) => {
     minutes: 0,
     seconds: 0,
   });
+   const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.products);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!products.length) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch]);
 
   // Calculate time left until the end date
   const calculateTimeLeft = (endDate) => {
@@ -35,6 +47,14 @@ const AdsComponent = ({ ads }) => {
     }
   }, [ads]);
 
+  const discountsData = products.filter((product) => product.discount > 0);
+
+    const handleShowMore = () => {
+    navigate("/products", {
+      state: { data: discountsData, title: "المنتجات الحديثة" },
+    });
+  };
+
   // Don't show the banner if the time has run out
   if (
     !ads ||
@@ -46,92 +66,60 @@ const AdsComponent = ({ ads }) => {
     return null; // Hide the component if offer has expired or not available
   }
 
-
-   return (
-    // <div className="min-w-full flex items-center justify-center p-4">
-    //    <div
-    //     //  #065A82, #0A9396
-    //     className="relative w-full bg-gradient-to-l from-[#065A82] to-[#0A9396] rounded-lg text-white py-8 px-6 shadow-xl mb-8"
-    //     style={{ direction: "rtl" }}
-    //   >
-    //     <div className="container w-full mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-    //       {/* Offer Information */}
-    //       <div className="flex flex-col justify-center items-start md:w-1/2">
-    //         <h2 className="text-3xl md:text-5xl font-bold leading-tight mb-4">
-    //           {ads?.title}
-    //         </h2>
-    //         <p className="text-gray-200 text-lg md:text-2xl leading-relaxed mb-2">
-    //           {ads?.description}
-    //         </p>
-    //         <p className="text-lg bg-primary p-4 rounded-md md:text-xl font-semibold">
-    //           خصم {ads?.discount || 0}%
-    //         </p>
-    //       </div>
-
-    //       {/* Countdown and Image */}
-    //       <div className="flex flex-col justify-center items-center md:w-1/2">
-    //         <div className="bg-white text-accent rounded-lg p-4 mb-4 text-center shadow-md">
-    //           <p className="text-lg font-semibold mb-2">العرض ينتهي في:</p>
-    //           <div className="text-xl md:text-2xl">
-    //             {timeLeft.days > 0 && `${timeLeft.days} أيام و `}
-    //             {`${timeLeft.hours
-    //               .toString()
-    //               .padStart(2, "0")}:${timeLeft.minutes
-    //               .toString()
-    //               .padStart(2, "0")}:${timeLeft.seconds
-    //               .toString()
-    //               .padStart(2, "0")} ساعة`}
-    //           </div>
-    //         </div>
-    //         <img
-    //           src={ads?.image}
-    //           alt="Offers"
-    //           // className="w-full h-48 md:w-3/4 md:h-64 rounded-lg shadow-lg object-cover"
-    //         />
-    //       </div>
-    //     </div>
-    //   </div>
-     // </div>
-     <div className="flex items-center justify-center p-6 bg-gray-100">
-  <div className="relative w-full max-w-5xl  bg-gradient-to-l from-[#065A82] to-[#0A9396] rounded-lg shadow-md overflow-hidden">
-    {/* Top Section */}
-    <div className="flex flex-col lg:flex-row items-center justify-between px-8 py-12">
-      {/* Left Image */}
-      <div className="flex-1 hidden lg:block">
-        <img
-          src={ads?.image}
-          alt="Left Offer"
-          className="rounded-lg object-cover w-full h-64 shadow-sm"
-        />
-      </div>
-
-      {/* Center Discount */}
-      <div className="flex-1 text-center">
-        <p className="uppercase text-white text-[1rem]  tracking-wider mb-4">
-          العرض ينتهي في {timeLeft.days} يوم و {timeLeft.hours}:{timeLeft.minutes}:{timeLeft.seconds}
-        </p>
-        <h1 className="text-white text-9xl font-bold leading-none mb-4">
-          {ads?.discount || 0}
-          <span className="text-9xl align-top">%</span>
-        </h1>
-        <p className="text-3xl text-gray-200">{ads?.description || "تفاصيل العرض"}</p>
-      </div>
-
-      {/* Right Image */}
-      <div className="flex-1 hidden lg:block">
-        <img
-          src={ads?.image}
-          alt="Right Offer"
-          className="rounded-lg object-cover w-full h-20 shadow-sm"
-        />
+  return (
+    <div className="flex items-center justify-center p-4 md:p-8">
+      <div className="relative w-full max-w-6xl bg-gradient-to-r from-purple-600 to-blue-500 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="flex flex-col lg:flex-row items-center justify-between px-4 md:px-10 py-8 md:py-16">
+          <div className="flex-1 text-center">
+            <div className="grid grid-cols-2 md:grid-flow-col gap-3 md:gap-6 text-center auto-cols-max justify-center mb-6 md:mb-8">
+              {[
+                { value: timeLeft.days, label: "days" },
+                { value: timeLeft.hours, label: "hours" },
+                { value: timeLeft.minutes, label: "min" },
+                { value: timeLeft.seconds, label: "sec" },
+              ].map((item, index) => (
+                <div key={index} className="flex flex-col p-2 md:p-3 bg-white/10 backdrop-blur-md rounded-xl text-white">
+                  <span className="countdown font-mono text-2xl md:text-4xl font-bold px-2 md:px-4">
+                    <span style={{ "--value": item.value }}></span>
+                  </span>
+                  <span className="text-xs md:text-sm mt-1">{item.label}</span>
+                </div>
+              ))}
+            </div>
+            <h3 className="text-white text-xl md:text-2xl font-bold leading-none mb-4 md:mb-6">
+              {ads?.title || "عنوان العرض"}
+            </h3>
+            <div className="relative inline-block">
+              <h1 className="text-white text-6xl md:text-8xl font-extrabold leading-none mb-4 md:mb-6">
+                {ads?.discount || 0}
+                <span className="text-4xl md:text-6xl align-top ml-1">%</span>
+              </h1>
+              <div className="absolute -inset-1 bg-white/20 blur-xl -z-10 rounded-full"></div>
+            </div>
+            <p className="text-xl md:text-2xl text-white/90 font-light px-4 md:px-0">
+              {ads?.description || "تفاصيل العرض"}
+            </p>
+            <button
+              onClick={handleShowMore}
+              className="mt-6 md:mt-8 px-6 md:px-8 py-2 md:py-3 bg-white text-black font-bold rounded-md hover:shadow-xl transition duration-300 text-sm md:text-base"
+            >
+              استكشف المزيد
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-
-  </div>
-</div>
-
-  
   );
+};
+
+AdsComponent.propTypes = {
+  ads: PropTypes.shape({
+    endDate: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    discount: PropTypes.number,
+    image: PropTypes.string,
+  }),
 };
 
 export default AdsComponent;

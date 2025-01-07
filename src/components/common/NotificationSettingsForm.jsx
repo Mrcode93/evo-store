@@ -1,36 +1,98 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { X } from 'lucide-react';
-const NotificationSettingsForm = ({onClose}) => {
+import axios from 'axios';
+import { showToast } from '../../utils/Toast';
+
+const NotificationSettingsForm = ({ onClose }) => {
   const [settings, setSettings] = useState({
-    emailNotifications: true,
+    emailNotifications: false,
     smsNotifications: false,
   });
+  const [loading, setLoading] = useState(true);
+
+  const getToken = () => {
+    return document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('user-auth-token='))
+      ?.split('=')[1];
+  };
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const token = getToken();
+        if (!token) throw new Error('No token found');
+
+        const response = await axios.get('http://localhost:8090/notifications', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setSettings({
+          emailNotifications: response.data.emailNotifications,
+          smsNotifications: response.data.textMessageNotifications,
+        });
+        setLoading(false);
+      } catch (error) {
+        showToast(error.response?.data || 'حدث خطأ ما', 'error');
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
 
   const handleChange = (e) => {
     setSettings({ ...settings, [e.target.name]: e.target.checked });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement notification settings update logic here
-    alert('Notification settings updated');
+    try {
+      const token = getToken();
+      if (!token) throw new Error('No token found');
+
+      await axios.put(
+        'http://localhost:8090/notifications',
+        {
+          emailNotifications: settings.emailNotifications,
+          textMessageNotifications: settings.smsNotifications,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      showToast('تم حفظ الإعدادات', 'success');
+      onClose();
+    } catch (error) {
+      showToast(error.response?.data || 'حدث خطأ ما', 'error');
+    }
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-      <form  onSubmit={handleSubmit} className="space-y-4" dir='rtl'>
-             
-          <div className="flex justify-end">
-                <button
-                type="button"
-                onClick={onClose}
-                className="text-gray-500 hover:text-gray-700"
-                >
-                <X size={24} />
-                  </button>
-          </div>
+    <form onSubmit={handleSubmit} className="space-y-4" dir="rtl">
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-gray-500 hover:text-gray-700"
+        >
+          <X size={24} />
+        </button>
+      </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">اشعارات البريد الالكتروني</label>
+        <label className="block text-sm font-medium text-gray-700">
+          اشعارات البريد الالكتروني
+        </label>
         <input
           type="checkbox"
           name="emailNotifications"
@@ -40,7 +102,9 @@ const NotificationSettingsForm = ({onClose}) => {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">اشعارات الرسائل النصية</label>
+        <label className="block text-sm font-medium text-gray-700">
+          اشعارات الرسائل النصية
+        </label>
         <input
           type="checkbox"
           name="smsNotifications"
@@ -60,6 +124,7 @@ const NotificationSettingsForm = ({onClose}) => {
     </form>
   );
 };
+
 NotificationSettingsForm.propTypes = {
   onClose: PropTypes.func.isRequired,
 };

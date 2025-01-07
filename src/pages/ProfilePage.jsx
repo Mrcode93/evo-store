@@ -27,10 +27,8 @@ const ProfilePage = () => {
   }, [dispatch]);
 
   const handleLogout = () => {
-    dispatch(logoutUser()).then(() => {
-      navigate("/");
-    }
-    );
+    dispatch(logoutUser());
+    navigate("/");
  
   };
 
@@ -69,7 +67,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="bg-gray-200 w-full relative  min-h-screen mx-auto  p-8  " style={{ direction: "rtl" }}>
+    <div className="bg-gray-200 w-full  relative  min-h-screen mx-auto  p-8  " style={{ direction: "rtl" }}>
       {/* Profile Settings Icon */}
       <BackBtn />
       <div className="flex justify-between relative items-center   mt-6">
@@ -121,7 +119,6 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <p className="text-base text-center text-gray-500 mb-8">معلومات المستخدم الخاصة بك:</p>
 
       {user ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-8">
@@ -133,9 +130,11 @@ const ProfilePage = () => {
                 className="w-40 h-40 rounded-full object-contain shadow-md"
               />
             ) : (
-              <div className="w-40 h-40 flex justify-center items-center bg-gray-200 rounded-full text-gray-600 text-lg">
-                <span>لا توجد صورة</span>
-              </div>
+              <img
+                src={AvatarImage}
+                alt="Profile"
+                className="w-40 h-40 rounded-full object-contain shadow-md"
+              />
             )}
           </div>
 

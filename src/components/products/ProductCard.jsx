@@ -3,20 +3,29 @@ import { Link } from 'react-router-dom';
 import Button from '../common/Button';
 import { useDispatch , useSelector} from 'react-redux';
 import { addItemToCart } from '../../redux/cartSlice';
-import { ShoppingBag, RefreshCcw, Heart } from 'lucide-react';
+import { ShoppingBag, Heart } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import { showToast } from '../../utils/Toast';
 import { fetchUserInfo } from '../../redux/userAuthSlice';
 import { useEffect } from 'react';
+import { useState } from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+
 const ProductCard = ({ product, link }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userAuth);
+  const [isWished, setIsWished] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchUserInfo())
-  },[dispatch])
-  
+    if (!user) {
+      dispatch(fetchUserInfo());
+    }
+    // check if the product is in the wishlist
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const wishedItem = wishlist.find((item) => item.productId === product._id);
+    setIsWished(!!wishedItem);
+  }, [dispatch, user, product._id]);
 
   const addItemToCartFunction = (e) => {
     // Prevent navigation to product details when the button is clicked
@@ -33,7 +42,7 @@ const ProductCard = ({ product, link }) => {
     }
 
     const cartItem = {
-      userId: user?._id ||null,
+      userId: user?._id || null,
       id: cartId,
       productId: product._id,
       quantity: 1,
@@ -41,37 +50,77 @@ const ProductCard = ({ product, link }) => {
 
     dispatch(addItemToCart(cartItem)).then(() => {
       showToast('تمت إضافة المنتج إلى السلة', 'success');
-    }
-    );
+    });
   };
 
+const toggleWishlistFunction = (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+
+  let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+  if (isWished) {
+    wishlist = wishlist.filter((item) => item.productId !== product._id);
+    setIsWished(false);
+    showToast('تمت إزالة المنتج من قائمة المفضلة', 'success');
+  } else {
+    const wishlistItem = {
+      userId: user?._id || null,
+      productId: product._id,
+    };
+    wishlist.push(wishlistItem);
+    setIsWished(true);
+    showToast('تمت إضافة المنتج إلى قائمة المفضلة', 'success');
+  }
+
+  localStorage.setItem('wishlist', JSON.stringify(wishlist));
+};
+
   const cardContent = (
-    <motion.div
-      whileHover={{ y: -5 }}
-      className="bg-secondary p-2 h-[340px] relative dark:bg-gray-800 border-gray-200 border-[2px] rounded-lg shadow-sm shadow-secondary overflow-hidden group"
-    >
-      <img
+    <motion.div className="bg-white p-1 h-[310px] w-[215px] md:w-[210px] relative dark:bg-gray-800 border-[2px] rounded-lg shadow-sm shadow-secondary overflow-hidden group">
+      {product.discount ? (
+        <div className="discount-label z-10">
+          <div className="discount-content">
+            <span className="text-xs xsm:text-sm">{product.discount}% OFF</span>
+          </div>
+        </div>
+      ) : null}
+
+      <LazyLoadImage 
         src={product.images[0]}
         alt={product.name}
-        className="w-full h-48 object-contain"
+        className="w-fit object-cover item"
       />
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-primary dark:text-secondary">
+      <div className="p-2 xsm:p-4">
+        <h3 className="text-sm xsm:text-base md:text-lg font-semibold text-primary dark:text-secondary line-clamp-2">
           {product.name}
         </h3>
-        <div className="flex justify-between items-center mt-4">
-          <span className="text-accent font-bold" dir="rtl">
-            {product.price} <span>د.ع</span>
-          </span>
-          <div className="flex rounded-sm p-2 absolute bg-gray-200 h-[40%] left-0 top-10 flex-col items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <ShoppingBag className="w-6 h-6 text-primary" onClick={addItemToCartFunction} />
-            <RefreshCcw className="w-6 h-6 text-primary" />
-            <Heart className="w-6 h-6 text-primary" />
+        <div className="flex justify-between items-center mt-2 xsm:mt-4">
+          {product.discount ? (
+            <>
+              <span className="text-xs xsm:text-sm text-gray-500 line-through">
+                {product.price} د.ع
+              </span>
+              <span className="text-xs xsm:text-sm md:text-base text-primary font-semibold">
+                {product.price - (product.price * product.discount) / 100} د.ع
+              </span>
+            </>
+          ) : (
+            <span className="text-xs xsm:text-sm md:text-base text-primary font-semibold">
+              {product.price} د.ع
+            </span>
+          )}
+          <div className="flex rounded-lg p-1 xsm:p-2 absolute bg-gray-200 h-fit gap-2 xsm:gap-4 left-0 top-0 flex-col items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <ShoppingBag className="w-4 h-4 xsm:w-5 xsm:h-5 md:w-6 md:h-6 text-primary" onClick={addItemToCartFunction} />
+            <Heart
+              className={`w-4 h-4 xsm:w-5 xsm:h-5 md:w-6 md:h-6 ${isWished ? 'text-red-600' : 'text-primary'}`}
+              onClick={toggleWishlistFunction}
+            />
           </div>
         </div>
       </div>
     </motion.div>
-  );
+  )
 
   return link ? (
     <Link to={`/product/${product._id}`} >
@@ -87,6 +136,7 @@ ProductCard.propTypes = {
     _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
+    discount: PropTypes.number,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   link: PropTypes.bool,

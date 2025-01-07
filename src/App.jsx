@@ -17,6 +17,7 @@ import CheckOutPage from './pages/CheckOutPage';
 import OrdersPage from './pages/OrderPage';
 import UserAuth from './pages/userAuthPage';
 import ProfilePage from './pages/ProfilePage';
+import WishList from './pages/WishList';
 import ProductsByCategory from './pages/ProductsByCategory';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,6 +29,8 @@ import mySound from "./assets/sounds/note.mp3"; // Your sound file path here
 import { showToast } from './utils/Toast';
 import TermsConditions from './pages/TermsConditions';
 import PrivacyPolicy from './pages/privacyPolicy';
+import AllProductsPage from './pages/AllThingsPage';
+import Header from './components/common/Header';
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +43,7 @@ function App() {
   const { userInfo } = useSelector((state) => state.userAuth);
   const { cart } = useSelector((state) => state.cart);
   const [play] = useSound(mySound, { volume: 1 });
+  const user = useSelector((state) => state.userAuth.user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,16 +53,20 @@ function App() {
       dispatch(fetchAds());
       dispatch(fetchFlashSales());
       dispatch(fetchHeroImages());
-      // dispatch(fetchUserInfo());
       dispatch(getCart());
     };
 
     fetchData();
   }, [dispatch]);
+  
+
+    useEffect(() => {
+    if (!user) {
+      dispatch(fetchUserInfo());
+    }
+  }, [dispatch, user]);
 
   useEffect(() => {
-
-
     // Connect to the socket
     dispatch(connectSocket());
 
@@ -82,7 +90,6 @@ function App() {
       dispatch(fetchUserOrders());
       play();
       showToast('تم تسليم الطلب', 'success');
-     
     };
 
     // Attach event listeners
@@ -99,12 +106,10 @@ function App() {
     };
   }, [dispatch, play]);
 
-
-
-
   return (
     <Router>
       <main>
+         <Header cart={cart} />
         <ToastContainer
           position="top-center"
           autoClose={1000}
@@ -123,13 +128,16 @@ function App() {
           />} />
           <Route path="/product/:id" element={<ProductDetails products={products} productById={productById} />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/wishlist" element={<WishList />} />
           <Route path="/checkout" element={<CheckOutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/login" element={<UserAuth />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/terms" element={<TermsConditions />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/products" element={< AllProductsPage/>} />
           <Route path="/category/:id" element={<ProductsByCategory products={products} />} />
+          
 
         </Routes>
       </main>

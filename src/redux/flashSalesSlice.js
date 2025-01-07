@@ -8,6 +8,7 @@ const initialState = {
     error: null,
 };
 
+
 // Create async thunks for fetching flash sales
 export const fetchFlashSales = createAsyncThunk(
     'flashSales/fetchFlashSales',

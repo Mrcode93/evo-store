@@ -39,31 +39,27 @@ const NotificationsDropdown = ({ isOpen, onClose }) => {
          notifications.map((notification, index) => (
   <div key={index} className="px-4 py-2 border-b text-center hover:bg-gray-200 transition-all border-gray-200">
     <Link to={"/orders"} className="text-gray-700 hover:text-gray-800">
-      {notification.type === 'newOrder' && (
-        <>
-          طلب جديد: رقم الطلب {notification.payload.data.orderId}. شكراً لاختيارك متجرنا!
-        </>
-      )}
+    
       {notification.type === 'orderStatus' && (
         <>
-          الطلب سوف يصلك اليوم  : رقم الطلب {notification.payload.data.orderId}. 
+          الطلب سوف يصلك اليوم  . 
         </>
       )}
       {notification.type === 'orderAccepted' && (
         <>
-          تم قبول الطلب: رقم الطلب {notification.payload.data.orderId}. 
+          تم قبول الطلب. 
           سيتم تجهيز طلبك قريباً.
         </>
       )}
       {notification.type === 'orderRejected' && (
         <>
-          تم رفض الطلب: رقم الطلب {notification.payload.data.orderId}. 
+          تم رفض الطلب
           نعتذر عن الإزعاج. الرجاء التواصل معنا للمزيد من التفاصيل.
         </>
       )}
       {notification.type === 'orderDelivered' && (
         <>
-          تم تسليم الطلب: رقم الطلب {notification.payload.data.orderId}. </>
+          تم تسليم الطلب: رقم الطلب . </>
       )}
     </Link>
   </div>
