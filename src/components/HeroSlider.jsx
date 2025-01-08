@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-const HeroSlider = ({ images }) => {
+const HeroSlider = ({ images, autoSlideInterval = 3000 }) => {
   const [current, setCurrent] = useState(0);
 
-  const imageUrls = images.map(image => image.imageUrl[0]);
+  const imageUrls = images.map((image) => image.imageUrl[0]);
 
   const nextSlide = () => {
     setCurrent((prev) => (prev === imageUrls.length - 1 ? 0 : prev + 1));
@@ -14,6 +14,13 @@ const HeroSlider = ({ images }) => {
   const prevSlide = () => {
     setCurrent((prev) => (prev === 0 ? imageUrls.length - 1 : prev - 1));
   };
+
+  useEffect(() => {
+    const autoSlide = setInterval(nextSlide, autoSlideInterval);
+
+    // Clear interval on component unmount
+    return () => clearInterval(autoSlide);
+  }, [current, autoSlideInterval]);
 
   const slideVariants = {
     enter: (direction) => ({
@@ -47,7 +54,7 @@ const HeroSlider = ({ images }) => {
           initial="enter"
           animate="center"
           exit="exit"
-          className="absolute w-full h-full object-cover object-center"
+          className="absolute w-full h-full object-contain object-center"
         />
       </AnimatePresence>
       <div className="absolute inset-0 flex justify-between items-center p-2 sm:p-4">

@@ -53,10 +53,30 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
+ useEffect(() => {
+  // Function to update the wishlist count
+  const updateWishlistCount = () => {
     const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
     setWishlistCount(wishlist.length);
-  }, []);
+  };
+
+  // Initial load
+  updateWishlistCount();
+
+  // Listen for `storage` events to detect changes in `localStorage`
+  const handleStorageChange = (event) => {
+    if (event.key === 'wishlist') {
+      updateWishlistCount();
+    }
+  };
+
+  window.addEventListener('storage', handleStorageChange);
+
+  return () => {
+    window.removeEventListener('storage', handleStorageChange);
+  };
+}, []);
+
 
   const handleBellClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -75,7 +95,6 @@ const isActive = (path) => {
 
 
   
-
   return (
     <>
       {/* Desktop Header */}

@@ -75,6 +75,7 @@ const toggleWishlistFunction = (e) => {
 
   localStorage.setItem('wishlist', JSON.stringify(wishlist));
 };
+// 
 
   const cardContent = (
     <motion.div className="bg-white p-1 h-[310px] w-[215px] md:w-[210px] relative dark:bg-gray-800 border-[2px] rounded-lg shadow-sm shadow-secondary overflow-hidden group">
@@ -91,32 +92,39 @@ const toggleWishlistFunction = (e) => {
         alt={product.name}
         className="w-fit object-cover item"
       />
-      <div className="p-2 xsm:p-4">
-        <h3 className="text-sm xsm:text-base md:text-lg font-semibold text-primary dark:text-secondary line-clamp-2">
+      <div className="px-2">
+        <h3 className="text-[14px]  font-semibold text-primary dark:text-secondary line-clamp-2">
           {product.name}
         </h3>
         <div className="flex justify-between items-center mt-2 xsm:mt-4">
           {product.discount ? (
             <>
-              <span className="text-xs xsm:text-sm text-gray-500 line-through">
+              <span className="text-[10px] xsm:text-sm text-gray-500 line-through">
                 {product.price} د.ع
               </span>
-              <span className="text-xs xsm:text-sm md:text-base text-primary font-semibold">
+              <span className="text-[10px] xsm:text-sm md:text-base text-primary font-semibold">
                 {product.price - (product.price * product.discount) / 100} د.ع
               </span>
             </>
           ) : (
-            <span className="text-xs xsm:text-sm md:text-base text-primary font-semibold">
+            <span className="text-[10px] xsm:text-sm md:text-base text-primary font-semibold">
               {product.price} د.ع
             </span>
           )}
-          <div className="flex rounded-lg p-1 xsm:p-2 absolute bg-gray-200 h-fit gap-2 xsm:gap-4 left-0 top-0 flex-col items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <ShoppingBag className="w-4 h-4 xsm:w-5 xsm:h-5 md:w-6 md:h-6 text-primary" onClick={addItemToCartFunction} />
-            <Heart
-              className={`w-4 h-4 xsm:w-5 xsm:h-5 md:w-6 md:h-6 ${isWished ? 'text-red-600' : 'text-primary'}`}
-              onClick={toggleWishlistFunction}
-            />
-          </div>
+         <div className="flex rounded-bl-none rounded-br-md p-1 xsm:p-2 absolute bg-gray-200/30 h-fit gap-2 xsm:gap-4 left-0 top-0 flex-col items-center justify-between transition-opacity duration-300 border-r-2 border-b-2 backdrop-blur-sm backdrop-filter">
+
+    <ShoppingBag
+      className="w-4 h-4 xsm:w-5 xsm:h-5 md:w-6 md:h-6 text-primary cursor-pointer"
+      onClick={addItemToCartFunction}
+    />
+    <Heart
+      className={`w-4 h-4 xsm:w-5 xsm:h-5 md:w-6 md:h-6 cursor-pointer ${
+        isWished ? 'text-red-600' : 'text-primary'
+      }`}
+      onClick={toggleWishlistFunction}
+    />
+  </div>
+
         </div>
       </div>
     </motion.div>

@@ -49,9 +49,10 @@ const WishList = () => {
     }
 
     return (
-        <section className="animate-fade-left relative">
+        
+        <section className="bg-gray-200 w-full  relative  min-h-screen mx-auto  p-8  " style={{ direction: "rtl" }}>
             <BackBtn/>
-            <div className="mx-auto relative max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+            <div className="mx-auto relative  px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
                 <header className="text-left mb-8">
                     <h1 className="text-2xl text-center font-bold text-gray-900 sm:text-3xl">
                        سلة الامنيات

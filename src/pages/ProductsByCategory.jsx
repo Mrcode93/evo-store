@@ -25,8 +25,8 @@ const ProductsByCategory = ({ products }) => {
           {filteredProducts.map((product) => (
             <motion.div
               key={product._id}
-              className="flex-shrink-0 w-full sm:w-64 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-              whileHover={{ scale: 1.05 }}
+              // className="flex-shrink-0 w-full sm:w-64 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              // whileHover={{ scale: 1.05 }}
             >
               <ProductCard product={product} link />
             </motion.div>
