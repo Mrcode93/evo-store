@@ -53,30 +53,10 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
- useEffect(() => {
-  // Function to update the wishlist count
-  const updateWishlistCount = () => {
+  useEffect(() => {
     const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
     setWishlistCount(wishlist.length);
-  };
-
-  // Initial load
-  updateWishlistCount();
-
-  // Listen for `storage` events to detect changes in `localStorage`
-  const handleStorageChange = (event) => {
-    if (event.key === 'wishlist') {
-      updateWishlistCount();
-    }
-  };
-
-  window.addEventListener('storage', handleStorageChange);
-
-  return () => {
-    window.removeEventListener('storage', handleStorageChange);
-  };
-}, []);
-
+  }, []);
 
   const handleBellClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
